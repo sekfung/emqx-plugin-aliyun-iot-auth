@@ -16,7 +16,7 @@
 
 gen_password(ClientId, DeviceName, ProductKey, Timestamp, DeviceSecret) ->
   WaitingSign = io_lib:format("clientId~sdeviceName~sproductKey~stimestamp~s", [ClientId, DeviceName, ProductKey, Timestamp]),
-  <<Mac:160/integer>> = crypto:mac(hmac, sha, list_to_binary(DeviceSecret), list_to_binary(WaitingSign)),
+  <<Mac:160/integer>> = crypto:hmac(sha, list_to_binary(DeviceSecret), list_to_binary(WaitingSign)),
   lists:flatten(integer_to_list(Mac, 16)).
 
 
