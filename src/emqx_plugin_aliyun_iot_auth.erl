@@ -24,7 +24,8 @@
 
 %% Client Lifecircle Hooks
 -export([
-        on_client_authenticate/3
+        on_client_authenticate/3,
+        description/0
         ]).
 
 %% Called when the plugin application start
@@ -33,8 +34,8 @@ load(Env) ->
 
 
 
-on_client_authenticate(_ClientInfo = #{clientid := ClientId}, Result, _Env) ->
-    io:format("Client(~s) authenticate, Result:~n~p~n", [ClientId, Result]),
+on_client_authenticate(_ClientInfo = #{clientid := ClientId, username := Username, password := Password}, Result, _Env) ->
+    io:format("Client(~s, ~s, ~s) authenticate, Result:~n~p~n", [ClientId, Username, Password, Result]),
     {ok, Result}.
 
 
@@ -44,4 +45,4 @@ unload() ->
     emqx:unhook('client.authenticate', {?MODULE, on_client_authenticate}).
 
 
-description() -> "Authentication with Redis".
+description() -> "EMQ X Authentication Plugin For Aliyun IoT".
