@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 25. Sep 2020 13:48
 %%%-------------------------------------------------------------------
--module(emqx_aliyun_auth).
+-module(emqx_aliyun_iot_auth).
 -author("sekfung").
 
 

@@ -14,21 +14,13 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_plugin_template_app).
+-module(emqx_aliyun_iot_auth_cli).
 
--behaviour(application).
+-export([cmd/1]).
 
--emqx_plugin(?MODULE).
+cmd(["arg1", "arg2"]) ->
+    emqx_ctl:print("ok");
 
--export([ start/2
-        , stop/1
-        ]).
-
-start(_StartType, _StartArgs) ->
-    {ok, Sup} = emqx_plugin_template_sup:start_link(),
-    emqx_plugin_template:load(application:get_all_env()),
-    {ok, Sup}.
-
-stop(_State) ->
-    emqx_plugin_template:unload().
+cmd(_) ->
+    emqx_ctl:usage([{"cmd arg1 arg2", "cmd demo"}]).
 

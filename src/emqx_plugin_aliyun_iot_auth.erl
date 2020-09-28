@@ -14,10 +14,34 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_plugin_template_test).
+-module(emqx_plugin_aliyun_iot_auth).
 
--compile(export_all).
+-include_lib("emqx/include/emqx.hrl").
 
-all() -> [].
+-export([ load/1
+        , unload/0
+        ]).
 
-groups() -> [].
+%% Client Lifecircle Hooks
+-export([
+        on_client_authenticate/3
+        ]).
+
+%% Called when the plugin application start
+load(Env) ->
+    emqx:hook('client.authenticate', {?MODULE, on_client_authenticate, [Env]}).
+
+
+
+on_client_authenticate(_ClientInfo = #{clientid := ClientId}, Result, _Env) ->
+    io:format("Client(~s) authenticate, Result:~n~p~n", [ClientId, Result]),
+    {ok, Result}.
+
+
+
+%% Called when the plugin application stop
+unload() ->
+    emqx:unhook('client.authenticate', {?MODULE, on_client_authenticate}).
+
+
+description() -> "Authentication with Redis".
