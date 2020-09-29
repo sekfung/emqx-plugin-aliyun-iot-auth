@@ -46,7 +46,7 @@ on_client_authenticate(ClientInfo = #{clientid := ClientId, username := Username
       type := Type,
       pool := Pool}) ->
   io:format("Client(~s, ~s, ~s, ~s) authenticate, Result:~n~p~n", [ClientId, Username, Password, HashType, AuthResult]),
-  CheckPass = case emqx_aliyun_iot_auth_cli:q(Pool, Type, AuthCmd, ClientInfo, Timeout) of
+  CheckPass = case emqx_auth_aliyun_iot_cli:q(Pool, Type, AuthCmd, ClientInfo, Timeout) of
                 {ok, DeviceSecret} when is_binary(DeviceSecret) ->
                   check_pass(DeviceSecret, ClientInfo);
                 {ok, [undefined | _]} ->
@@ -81,7 +81,7 @@ unload() ->
 -spec(is_superuser(atom(), atom(), undefined|list(), emqx_types:client(), timeout()) -> boolean()).
 is_superuser(_Pool, _Type, undefined, _ClientInfo, _Timeout) -> false;
 is_superuser(Pool, Type, SuperCmd, ClientInfo, Timeout) ->
-  case emqx_aliyun_iot_auth_cli:q(Pool, Type, SuperCmd, ClientInfo, Timeout) of
+  case emqx_auth_aliyun_iot_cli:q(Pool, Type, SuperCmd, ClientInfo, Timeout) of
     {ok, undefined} -> false;
     {ok, <<"1">>} -> true;
     {ok, _Other} -> false;
@@ -91,7 +91,7 @@ is_superuser(Pool, Type, SuperCmd, ClientInfo, Timeout) ->
 check_pass(DeviceSecret, #{clientid := ClientId, username := Username, password := Password}) ->
   erlang:display(DeviceSecret),
   erlang:display(ClientId),
-  PasswordResult = emqx_aliyun_iot_auth:gen_password(ClientId, Username, Username, ClientId, DeviceSecret),
+  PasswordResult = emqx_auth_aliyun_iot_util:gen_password(ClientId, Username, Username, ClientId, DeviceSecret),
   case string:equal(PasswordResult, Password) of
     true -> ok;
     false -> ok
