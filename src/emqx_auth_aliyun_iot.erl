@@ -18,7 +18,7 @@
 
 -include_lib("emqx/include/emqx.hrl").
 -include_lib("emqx/include/logger.hrl").
--include("../include/emqx_aliyun_iot_auth.hrl").
+-include("../include/emqx_auth_aliyun_iot.hrl").
 
 -export([register_metrics/0
   , load/1

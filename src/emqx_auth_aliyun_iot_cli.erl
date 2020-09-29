@@ -18,7 +18,7 @@
 
 -behaviour(ecpool_worker).
 
--include("../include/emqx_aliyun_iot_auth.hrl").
+-include("../include/emqx_auth_aliyun_iot.hrl").
 
 -include_lib("emqx/include/emqx.hrl").
 -include_lib("emqx/include/logger.hrl").

@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -author("sekfung").
 
--define(APP, emqx_plugin_aliyun_iot_auth).
+-define(APP, emqx_auth_aliyun_iot).
 
 -record(auth_metrics, {
   success = 'client.auth.success',

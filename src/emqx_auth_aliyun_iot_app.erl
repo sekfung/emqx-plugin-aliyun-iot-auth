@@ -20,15 +20,15 @@
 
 -emqx_plugin(?MODULE).
 
--export([ start/2
-        , stop/1
-        ]).
+-export([start/2
+  , stop/1
+]).
 
 start(_StartType, _StartArgs) ->
-    {ok, Sup} = emqx_plugin_aliyun_iot_auth_sup:start_link(),
-    emqx_plugin_aliyun_iot_auth:load(application:get_all_env()),
-    {ok, Sup}.
+  {ok, Sup} = emqx_auth_aliyun_iot_sup:start_link(),
+  emqx_auth_aliyun_iot:load(application:get_all_env()),
+  {ok, Sup}.
 
 stop(_State) ->
-  emqx_plugin_aliyun_iot_auth:unload().
+  emqx_auth_aliyun_iot:unload().
 
