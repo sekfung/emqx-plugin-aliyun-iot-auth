@@ -11,13 +11,13 @@
 
 
 -include_lib("eunit/include/eunit.hrl").
--import(emqx_auth_aliyun_iot, [gen_password/5]).
+-import(emqx_auth_aliyun_iot_util, [gen_password/5]).
 -import(emqx_plugin_auth_aliyun_iot, [on_client_authenticate/3]).
 
 
 
 gen_password_test() ->
-  Result = emqx_auth_aliyun_iot:gen_password("11111", "test1", "aa", "2524608000000", "bb"),
+  Result = emqx_auth_aliyun_iot_util:gen_password("11111", "test1", "aa", "2524608000000", "bb"),
   erlang:display(Result),
   ?assertEqual("6B1994895A537C8DE9645B1CBE8DC0DFA4A7C4B", Result).
 

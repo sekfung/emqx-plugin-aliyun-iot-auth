@@ -2,13 +2,13 @@
  [{description, "EMQ X Authentication Plugin For Aliyun IoT"},
   {vsn, "git"},
   {modules, []},
-  {registered, [emqx_plugin_auth_aliyun_iot_sup]},
+  {registered, [emqx_auth_aliyun_iot_sup]},
   {applications, [kernel,stdlib]},
   {mod, {emqx_auth_aliyun_iot_app,[]}},
   {env, []},
   {licenses, ["Apache-2.0"]},
   {maintainers, ["EMQ X Team <contact@emqx.io>"]},
   {links, [{"Homepage", "https://emqx.io/"},
-           {"Github", "https://github.com/sekfung/emqx-plugin-aliyun-iot-auth"}
+           {"Github", "https://github.com/sekfung/emqx-auth-aliyun-iot"}
           ]}
  ]}.
