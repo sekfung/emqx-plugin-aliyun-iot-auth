@@ -14,7 +14,7 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_aliyun_iot_auth_cli).
+-module(emqx_auth_aliyun_iot_cli).
 
 -behaviour(ecpool_worker).
 

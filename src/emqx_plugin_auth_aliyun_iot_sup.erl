@@ -14,7 +14,7 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_plugin_aliyun_iot_auth_sup).
+-module(emqx_plugin_auth_aliyun_iot_sup).
 
 -behaviour(supervisor).
 

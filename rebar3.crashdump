@@ -1,0 +1,12 @@
+Error: {badmatch,{error,{54,erl_parse,["syntax error before: ","'.'"]}}}
+[{rebar_config,consult_file_,1,
+               [{file,"/opt/rebar3/src/rebar_config.erl"},{line,260}]},
+ {rebar_config,consult_file,1,
+               [{file,"/opt/rebar3/src/rebar_config.erl"},{line,242}]},
+ {rebar3,init_config,0,[{file,"/opt/rebar3/src/rebar3.erl"},{line,206}]},
+ {rebar3,run,1,[{file,"/opt/rebar3/src/rebar3.erl"},{line,100}]},
+ {rebar3,main,1,[{file,"/opt/rebar3/src/rebar3.erl"},{line,66}]},
+ {escript,run,2,[{file,"escript.erl"},{line,758}]},
+ {escript,start,1,[{file,"escript.erl"},{line,277}]},
+ {init,start_em,1,[]}]
+

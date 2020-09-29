@@ -14,7 +14,7 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_plugin_aliyun_iot_auth_app).
+-module(emqx_auth_aliyun_iot_app).
 
 -behaviour(application).
 
