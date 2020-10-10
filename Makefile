@@ -9,6 +9,8 @@ all: compile
 compile:
 	$(REBAR) compile
 
+clean: distclean
+
 ct: compile
 	$(REBAR) as test ct -v
 
@@ -20,8 +22,6 @@ xref:
 
 cover:
 	$(REBAR) cover
-
-clean: distclean
 
 distclean:
 	@rm -rf _build

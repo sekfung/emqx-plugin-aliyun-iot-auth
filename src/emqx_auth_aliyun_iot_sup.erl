@@ -14,21 +14,33 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_plugin_template_app).
+-module(emqx_auth_aliyun_iot_sup).
 
--behaviour(application).
+-behaviour(supervisor).
 
--emqx_plugin(?MODULE).
+-include("../include/emqx_auth_aliyun_iot.hrl").
 
--export([ start/2
-        , stop/1
-        ]).
+-export([start_link/0]).
 
-start(_StartType, _StartArgs) ->
-    {ok, Sup} = emqx_plugin_template_sup:start_link(),
-    emqx_plugin_template:load(application:get_all_env()),
-    {ok, Sup}.
+-export([init/1]).
 
-stop(_State) ->
-    emqx_plugin_template:unload().
+start_link() ->
+    supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
+init([]) ->
+    case application:get_env(?APP, server) of
+        {ok, Server} ->
+            {ok, {{one_for_one, 10, 100}, pool_spec(Server)}};
+        undefined ->
+            {ok, { {one_for_all, 0, 1}, []} }
+    end.
+
+
+pool_spec(Server) ->
+    case proplists:get_value(type, Server) of
+        cluster ->
+            eredis_cluster:start_pool(?APP, Server),
+            [];
+        _ ->
+            [ecpool:pool_spec(?APP, ?APP, emqx_auth_aliyun_iot_cli, Server)]
+    end.
