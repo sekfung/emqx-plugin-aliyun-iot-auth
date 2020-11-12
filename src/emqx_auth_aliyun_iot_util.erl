@@ -24,7 +24,7 @@ gen_password(ClientId, UserName, DeviceSecret) ->
   TimeStamp = lists:nth(2, string:tokens(TimeStampResult, "=")),
   WaitingSign = io_lib:format("clientId~sdeviceName~sproductKey~stimestamp~s", [IMEI, DeviceName, ProductKey, TimeStamp]),
   <<Mac:160/integer>> = crypto:hmac(sha, list_to_binary(DeviceSecret), list_to_binary(WaitingSign)),
-  lists:flatten(integer_to_list(Mac, 16)).
+  string:to_lower(lists:flatten(integer_to_list(Mac, 16))).
 
 
 
