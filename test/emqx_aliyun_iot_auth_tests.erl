@@ -15,6 +15,10 @@
 
 
 gen_password_test() ->
-  Result = emqx_auth_aliyun_iot_util:gen_password("11111|securemode=3,timestamp=2524608000000,signmethod=hmacsha1|", "test1&a1U4pQzrgim", "fc73ae4f1f2fb21073f1eee685cf4435"),
-  ?assertEqual("88794A49FC0663F9EB3EB3C97194D2F76D10329B", Result).
+  Result = emqx_auth_aliyun_iot_util:gen_password("1912426236|securemode=3,timestamp=1072916711,signmethod=hmacsha1|", "test1&a1U4pQzrgim", "fc73ae4f1f2fb21073f1eee685cf4435"),
+  erlang:display(Result),
+  ?assertEqual("922ef355d702a63adca62b9b8c1c5f6d59dcd349", Result).
 
+redis_cluster_test() ->
+  ClientInfo = #{clientid => <<"1912426236|securemode=3,timestamp=1072916711,signmethod=hmacsha1|">>, username =>  <<"test1&a1U4pQzrgim">>, password => <<"922ef355d702a63adca62b9b8c1c5f6d59dcd349">>},
+  emqx_auth_aliyun_iot_cli:q(emqx_auth_aliyun_iot, cluster, "HMGET mqtt_user:%u device_secret", ClientInfo, 5000).
