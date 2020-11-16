@@ -14,8 +14,10 @@ clean: distclean
 ct: compile
 	$(REBAR) as test ct -v
 
-eunit: compile
-	$(REBAR) as test eunit
+eunit:
+	@rm -rf .eunit
+	@mkdir -p .eunit
+	@ERL_FLAGS="-config app.config" $(REBAR) eunit
 
 xref:
 	$(REBAR) xref

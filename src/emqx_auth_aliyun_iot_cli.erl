@@ -66,7 +66,7 @@ connect(Opts) ->
 q(Pool, Type, CmdStr, Credentials, Timeout) ->
     Cmd = string:tokens(replvar(CmdStr, Credentials), " "),
     case Type of
-        cluster -> eredis_cluster:q(Pool, Cmd);
+        cluster -> eredis_cluster:q(Cmd);
         _ -> ecpool:with_client(Pool, fun(C) -> eredis:q(C, Cmd, Timeout) end)
     end.
 
