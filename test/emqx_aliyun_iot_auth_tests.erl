@@ -16,5 +16,5 @@
 
 gen_password_test() ->
   Result = emqx_auth_aliyun_iot_util:gen_password("11111|securemode=3,timestamp=2524608000000,signmethod=hmacsha1|", "test1&a1U4pQzrgim", "fc73ae4f1f2fb21073f1eee685cf4435"),
-  ?assertEqual("88794A49FC0663F9EB3EB3C97194D2F76D10329B", Result).
+  ?assertEqual("88794a49fc0663f9eb3eb3c97194d2f76d10329b", Result).
 
