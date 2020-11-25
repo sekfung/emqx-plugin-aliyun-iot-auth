@@ -28,19 +28,16 @@ start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
-    case application:get_env(?APP, server) of
-        {ok, Server} ->
-            {ok, {{one_for_one, 10, 100}, pool_spec(Server)}};
-        undefined ->
-            {ok, { {one_for_all, 0, 1}, []} }
-    end.
+    {ok, Server} = application:get_env(?APP, server),
+    {ok, {{one_for_one, 10, 100}, pool_spec(Server)}}.
 
 
 pool_spec(Server) ->
+    Options = application:get_env(?APP, options, []),
     case proplists:get_value(type, Server) of
         cluster ->
-            eredis_cluster:start_pool(?APP, Server),
+            eredis_cluster:start_pool(?APP, Server ++ Options),
             [];
         _ ->
-            [ecpool:pool_spec(?APP, ?APP, emqx_auth_aliyun_iot_cli, Server)]
+            [ecpool:pool_spec(?APP, ?APP, emqx_auth_aliyun_iot_cli, Server ++ Options)]
     end.
