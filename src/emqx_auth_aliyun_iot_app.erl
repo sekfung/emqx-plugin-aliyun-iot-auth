@@ -30,9 +30,8 @@ start(_StartType, _StartArgs) ->
   {ok, Sup}.
 
 stop(_State) ->
-  emqx:unhook('client.authenticate', fun emqx_auth_aliyun_iot:check/3),
+  emqx:unhook('client.authenticate', fun emqx_auth_aliyun_iot:check/3).
   %% Ensure stop cluster pool if the server type is cluster
-  eredis_cluster:stop_pool(?APP).
 
 if_cmd_enabled(Par, Fun) ->
   case application:get_env(?APP, Par) of
@@ -49,7 +48,6 @@ load_auth_hook(AuthCmd) ->
     super_cmd => SuperCmd,
     hash_type => HashType,
     timeout => Timeout,
-    type => Type,
-    pool => ?APP},
+    type => Type},
   ok = emqx_auth_aliyun_iot:register_metrics(),
   emqx:hook('client.authenticate', fun emqx_auth_aliyun_iot:check/3, [Config]).

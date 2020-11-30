@@ -36,8 +36,7 @@ pool_spec(Server) ->
     Options = application:get_env(?APP, options, []),
     case proplists:get_value(type, Server) of
         cluster ->
-            eredis_cluster:start_pool(?APP, Server ++ Options),
             [];
         _ ->
-            [ecpool:pool_spec(?APP, ?APP, emqx_auth_aliyun_iot_cli, Server ++ Options)]
+          throw({badarg, only_support_cluster})
     end.

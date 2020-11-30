@@ -26,7 +26,7 @@
 -import(proplists, [get_value/2, get_value/3]).
 
 -export([ connect/1
-    , q/5
+    , q/4
 ]).
 
 %%--------------------------------------------------------------------
@@ -34,21 +34,15 @@
 %%--------------------------------------------------------------------
 
 connect(Opts) ->
-    Sentinel = get_value(sentinel, Opts),
-    Host = case Sentinel =:= "" of
-               true -> get_value(host, Opts);
-               false ->
-                   eredis_sentinel:start_link(get_value(servers, Opts)),
-                   "sentinel:" ++ Sentinel
-           end,
-    case eredis:start_link(
-        Host,
-        get_value(port, Opts, 6379),
-        get_value(database, Opts, 0),
-        get_value(password, Opts, ""),
-        3000,
-        5000,
-        get_value(options, Opts, [])) of
+    Host = get_value(host, Opts),
+    PoolSize = get_value(pool, Opts, 8),
+    Password = get_value(password, Opts, ""),
+    application:set_env(eredis_cluster, pool_size, PoolSize),
+    application:set_env(eredis_cluster, password,  Password),
+    application:set_env(eredis_cluster, pool_max_overflow, 10),
+    application:set_env(eredis_cluster, socket_options, [{send_timeout, 6000}]),
+    eredis_cluster:start(),
+    case eredis_cluster:connect(Host) of
         {ok, Pid} -> {ok, Pid};
         {error, Reason = {connection_error, _}} ->
             ?LOG(error, "[Redis] Can't connect to Redis server: Connection refused."),
@@ -62,13 +56,13 @@ connect(Opts) ->
     end.
 
 %% Redis Query.
--spec(q(atom(), atom(), string(), emqx_types:clientinfo(), timeout())
+-spec(q(atom(), string(), emqx_types:clientinfo(), timeout())
         -> {ok, undefined | binary() | list()} | {error, atom() | binary()}).
-q(Pool, Type, CmdStr, ClientInfo, Timeout) ->
+q(Type, CmdStr, ClientInfo, Timeout) ->
     Cmd = string:tokens(replvar(CmdStr, ClientInfo), " "),
     case Type of
-        cluster -> eredis_cluster:q(Pool, Cmd);
-        _ -> ecpool:with_client(Pool, fun(C) -> eredis:q(C, Cmd, Timeout) end)
+        cluster -> eredis_cluster:q(replvar(Cmd, ClientInfo));
+        _ -> eredis:q(Cmd, Timeout)
     end.
 
 replvar(Cmd, ClientInfo = #{cn := CN}) ->

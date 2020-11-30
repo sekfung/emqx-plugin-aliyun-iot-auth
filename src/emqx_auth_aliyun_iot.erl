@@ -34,9 +34,8 @@ check(ClientInfo = #{clientid := ClientId, username := Username, password := Pas
       super_cmd := SuperCmd,
       hash_type := HashType,
       timeout := Timeout,
-      type := Type,
-      pool := Pool}) ->
-  CheckPass = case emqx_auth_aliyun_iot_cli:q(Pool, Type, AuthCmd, ClientInfo, Timeout) of
+      type := Type}) ->
+  CheckPass = case emqx_auth_aliyun_iot_cli:q(Type, AuthCmd, ClientInfo, Timeout) of
                 {ok, DeviceSecret} when is_binary(DeviceSecret) ->
                   check_pass(DeviceSecret, ClientInfo);
                 {ok, [undefined | _]} ->
@@ -50,7 +49,7 @@ check(ClientInfo = #{clientid := ClientId, username := Username, password := Pas
   case CheckPass of
     ok ->
       ok = emqx_metrics:inc(?AUTH_METRICS(success)),
-      IsSuperuser = is_superuser(Pool, Type, SuperCmd, ClientInfo, Timeout),
+      IsSuperuser = is_superuser(Type, SuperCmd, ClientInfo, Timeout),
       {stop, AuthResult#{is_superuser => IsSuperuser,
         anonymous => false,
         auth_result => success}};
@@ -62,10 +61,10 @@ check(ClientInfo = #{clientid := ClientId, username := Username, password := Pas
       {stop, AuthResult#{auth_result => ResultCode, anonymous => false}}
   end.
 
--spec(is_superuser(atom(), atom(), undefined|list(), emqx_types:client(), timeout()) -> boolean()).
-is_superuser(_Pool, _Type, undefined, _ClientInfo, _Timeout) -> false;
-is_superuser(Pool, Type, SuperCmd, ClientInfo, Timeout) ->
-  case emqx_auth_aliyun_iot_cli:q(Pool, Type, SuperCmd, ClientInfo, Timeout) of
+-spec(is_superuser(atom(), undefined|list(), emqx_types:client(), timeout()) -> boolean()).
+is_superuser( _Type, undefined, _ClientInfo, _Timeout) -> false;
+is_superuser(Type, SuperCmd, ClientInfo, Timeout) ->
+  case emqx_auth_aliyun_iot_cli:q(Type, SuperCmd, ClientInfo, Timeout) of
     {ok, undefined} -> false;
     {ok, <<"1">>} -> true;
     {ok, _Other} -> false;
