@@ -50,8 +50,7 @@ check(ClientInfo = #{clientid := ClientId, username := Username, password := Pas
   case CheckPass of
     ok ->
       ok = emqx_metrics:inc(?AUTH_METRICS(success)),
-      IsSuperuser = is_superuser(Pool, Type, SuperCmd, ClientInfo, Timeout),
-      {stop, AuthResult#{is_superuser => IsSuperuser,
+      {stop, AuthResult#{
         anonymous => false,
         auth_result => success}};
     {error, not_found} ->
@@ -60,16 +59,6 @@ check(ClientInfo = #{clientid := ClientId, username := Username, password := Pas
       ok = emqx_metrics:inc(?AUTH_METRICS(failure)),
       ?LOG(error, "[Redis] Auth from redis failed: ~p", [ResultCode]),
       {stop, AuthResult#{auth_result => ResultCode, anonymous => false}}
-  end.
-
--spec(is_superuser(atom(), atom(), undefined|list(), emqx_types:client(), timeout()) -> boolean()).
-is_superuser(_Pool, _Type, undefined, _ClientInfo, _Timeout) -> false;
-is_superuser(Pool, Type, SuperCmd, ClientInfo, Timeout) ->
-  case emqx_auth_aliyun_iot_cli:q(Pool, Type, SuperCmd, ClientInfo, Timeout) of
-    {ok, undefined} -> false;
-    {ok, <<"1">>} -> true;
-    {ok, _Other} -> false;
-    {error, _Error} -> false
   end.
 
 check_pass(DeviceSecret, #{clientid := ClientId, username := Username, password := Password}) ->
