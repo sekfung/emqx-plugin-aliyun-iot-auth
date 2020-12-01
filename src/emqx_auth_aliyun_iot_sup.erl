@@ -28,12 +28,8 @@ start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
-    case application:get_env(?APP, server) of
-        {ok, Server} ->
-            {ok, {{one_for_one, 10, 100}, pool_spec(Server)}};
-        undefined ->
-            {ok, { {one_for_all, 0, 1}, []} }
-    end.
+    {ok, Server} = application:get_env(?APP, server),
+    {ok, {{one_for_one, 10, 100}, pool_spec(Server)}}.
 
 
 pool_spec(Server) ->
